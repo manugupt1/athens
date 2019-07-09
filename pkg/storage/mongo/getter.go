@@ -19,7 +19,7 @@ func (s *ModuleStore) Info(ctx context.Context, module, vsn string) ([]byte, err
 	ctx, span := observ.StartSpan(ctx, op.String())
 	defer span.End()
 
-	result, err := query(ctx, s, module, vsn)
+	result, err := s.query(ctx, module, vsn)
 
 	if err != nil {
 		return nil, errors.E(op, err)
@@ -34,7 +34,7 @@ func (s *ModuleStore) GoMod(ctx context.Context, module, vsn string) ([]byte, er
 	ctx, span := observ.StartSpan(ctx, op.String())
 	defer span.End()
 
-	result, err := query(ctx, s, module, vsn)
+	result, err := s.query(ctx, module, vsn)
 
 	if err != nil {
 		return nil, errors.E(op, err)
@@ -69,7 +69,7 @@ func (s *ModuleStore) Zip(ctx context.Context, module, vsn string) (io.ReadClose
 }
 
 // Query connects to and queries storage module
-func query(ctx context.Context, s *ModuleStore, module, vsn string) (*storage.Module, error) {
+func (s *ModuleStore) query(ctx context.Context, module, vsn string) (*storage.Module, error) {
 	const op errors.Op = "mongo.query"
 	ctx, span := observ.StartSpan(ctx, op.String())
 	defer span.End()
